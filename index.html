@@ -1,122 +1,57 @@
-
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>데일리 퀘스트 🎮</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet"/>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
-#qa2 *{box-sizing:border-box;font-family:'Noto Sans KR',sans-serif;}
-#qa2{border-radius:24px;overflow:hidden;background:#1a0533;}
-.sky{background:linear-gradient(180deg,#2D1B69 0%,#6B35A8 60%,#FF7EB3 100%);padding:0;min-height:700px;display:flex;flex-direction:column;}
-@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
-@keyframes twinkle{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.7);}}
-@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
-@keyframes bounce-in{0%{transform:scale(0) rotate(-10deg);opacity:0;}60%{transform:scale(1.2) rotate(3deg);}100%{transform:scale(1) rotate(0deg);opacity:1;}}
-@keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-6px);}40%{transform:translateX(6px);}60%{transform:translateX(-4px);}80%{transform:translateX(4px);}}
-@keyframes slide-up{from{transform:translateY(30px);opacity:0;}to{transform:translateY(0);opacity:1;}}
-@keyframes confetti-fall{0%{transform:translateY(-20px) rotate(0deg);opacity:1;}100%{transform:translateY(80px) rotate(720deg);opacity:0;}}
-@keyframes point-fly{0%{transform:translateY(0) scale(0.5);opacity:0;}30%{transform:translateY(-15px) scale(1.4);opacity:1;}100%{transform:translateY(-55px) scale(1);opacity:0;}}
-@keyframes star-pop{0%{transform:scale(0);opacity:1;}50%{transform:scale(1.5);}100%{transform:scale(1);opacity:0;}}
-@keyframes pulse-glow{0%,100%{box-shadow:0 0 0 0 rgba(255,200,0,0.5);}50%{box-shadow:0 0 0 8px rgba(255,200,0,0);}}
-@keyframes rainbow-text{0%{color:#ff6b9d;}25%{color:#ffd700;}50%{color:#7effd4;}75%{color:#c44eff;}100%{color:#ff6b9d;}}
-@keyframes wobble{0%,100%{transform:rotate(0);}25%{transform:rotate(-8deg);}75%{transform:rotate(8deg);}}
-.star-bg{position:absolute;pointer-events:none;}
-.qa-header{background:rgba(0,0,0,0.25);backdrop-filter:blur(4px);padding:14px 16px 10px;color:white;position:relative;border-bottom:1px solid rgba(255,255,255,0.1);}
-.qa-date{font-size:11px;opacity:0.75;margin-bottom:3px;letter-spacing:0.5px;}
-.qa-title-row{display:flex;justify-content:space-between;align-items:center;}
-.qa-title{font-size:20px;font-weight:900;letter-spacing:-0.5px;text-shadow:0 2px 8px rgba(0,0,0,0.3);}
-.coin-pill{background:linear-gradient(135deg,#FFD700,#FFA500);border-radius:20px;padding:7px 14px;display:flex;align-items:center;gap:5px;font-weight:900;font-size:15px;color:#7A3A00;cursor:pointer;animation:pulse-glow 2s infinite;transition:transform 0.15s;}
-.coin-pill:hover{transform:scale(1.08);}
-.coin-pill:active{transform:scale(0.95);}
-.qa-profiles{display:flex;gap:8px;padding:10px 14px 6px;}
-.prof-btn{display:flex;align-items:center;gap:7px;padding:8px 12px;border-radius:20px;border:2px solid rgba(255,255,255,0.2);cursor:pointer;font-size:12px;font-weight:700;transition:all 0.25s;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);}
-.prof-btn.active{background:rgba(255,255,255,0.95);color:#6B35A8;border-color:white;box-shadow:0 4px 16px rgba(0,0,0,0.25);transform:translateY(-2px);}
-.prof-avatar{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;}
-.prof-pts-badge{font-size:10px;background:rgba(255,200,0,0.9);color:#7A3A00;border-radius:8px;padding:2px 6px;font-weight:900;}
-.prof-btn.active .prof-pts-badge{background:linear-gradient(135deg,#FFD700,#FFA500);}
-.qa-tabs{display:flex;padding:0 14px;gap:4px;margin-bottom:4px;}
-.qa-tab{padding:9px 16px;font-size:12px;font-weight:700;color:rgba(255,255,255,0.5);cursor:pointer;border-radius:12px 12px 0 0;transition:all 0.2s;border:none;background:transparent;}
-.qa-tab.active{color:white;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.2);border-bottom:none;}
-.qa-body{flex:1;background:rgba(255,255,255,0.97);border-radius:16px 16px 0 0;padding:14px;overflow-y:auto;}
-.prog-wrap{margin-bottom:10px;}
-.prog-info{display:flex;justify-content:space-between;font-size:11px;color:#999;margin-bottom:5px;}
-.prog-track{background:#EEE;border-radius:10px;height:12px;overflow:hidden;position:relative;}
-.prog-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,#FF6B9D,#C44EFF,#7B68EE);transition:width 0.6s cubic-bezier(.4,0,.2,1);position:relative;}
-.prog-fill::after{content:'';position:absolute;right:0;top:0;width:12px;height:12px;background:white;border-radius:50%;box-shadow:0 0 6px rgba(196,78,255,0.8);}
-.quest-card{display:flex;align-items:center;gap:10px;background:white;border-radius:16px;padding:11px 13px;margin-bottom:7px;box-shadow:0 2px 10px rgba(0,0,0,0.07);border:2px solid #F0E8FF;transition:all 0.3s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden;cursor:pointer;user-select:none;}
-.quest-card:hover{transform:translateY(-2px) scale(1.01);box-shadow:0 6px 20px rgba(0,0,0,0.12);}
-.quest-card:active{transform:scale(0.98);}
-.quest-card.done{background:linear-gradient(135deg,#F0FFF8,#E8FFE0);border-color:#B8EDCC;}
-.quest-card.done:hover{transform:none;}
-.quest-card.completing{animation:bounce-in 0.5s cubic-bezier(.4,0,.2,1);}
-.check-circle{width:28px;height:28px;border-radius:50%;border:2.5px solid #DDD;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.35s cubic-bezier(.4,0,.2,1);background:white;font-size:14px;}
-.quest-card.done .check-circle{background:linear-gradient(135deg,#4CAF50,#00BFA5);border-color:transparent;animation:wobble 0.5s ease;}
-.q-icon{font-size:22px;flex-shrink:0;transition:transform 0.3s;}
-.quest-card:hover .q-icon{animation:wobble 0.5s ease;}
-.q-text{flex:1;font-size:13px;font-weight:700;color:#333;transition:all 0.3s;}
-.quest-card.done .q-text{text-decoration:line-through;color:#bbb;}
-.q-pts{background:linear-gradient(135deg,#FF6B9D,#C44EFF);color:white;border-radius:10px;padding:3px 8px;font-size:10px;font-weight:900;white-space:nowrap;transition:all 0.3s;}
-.quest-card.done .q-pts{background:linear-gradient(135deg,#4CAF50,#00BFA5);}
-.del-btn{background:none;border:none;cursor:pointer;font-size:15px;color:#CCC;padding:4px;line-height:1;border-radius:6px;transition:all 0.2s;flex-shrink:0;}
-.del-btn:hover{color:#FF5252;background:#FFF0F0;transform:scale(1.2);}
-.add-area{background:linear-gradient(135deg,#F8F0FF,#FFF0F8);border-radius:14px;padding:12px;margin-top:10px;border:2px dashed #E0C8FF;}
-.add-row{display:flex;gap:8px;align-items:center;}
-.add-input{flex:1;border:2px solid #E8D5FF;border-radius:12px;padding:9px 13px;font-size:13px;color:#333;outline:none;background:white;font-family:inherit;transition:border-color 0.2s;}
-.add-input:focus{border-color:#C44EFF;box-shadow:0 0 0 3px rgba(196,78,255,0.15);}
-.add-icon-sel{border:2px solid #E8D5FF;border-radius:10px;padding:8px 10px;font-size:16px;background:white;cursor:pointer;transition:all 0.2s;}
-.add-icon-sel:hover{border-color:#C44EFF;}
-.add-btn{background:linear-gradient(135deg,#C44EFF,#FF6B9D);color:white;border:none;border-radius:12px;padding:9px 16px;font-size:13px;font-weight:900;cursor:pointer;white-space:nowrap;font-family:inherit;transition:all 0.2s;}
-.add-btn:hover{transform:scale(1.05);}
-.add-btn:active{transform:scale(0.95);}
-.report-btn{width:100%;margin-top:12px;background:linear-gradient(135deg,#FFE066,#FFB300);color:#7A4500;border:none;border-radius:16px;padding:14px;font-size:14px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;box-shadow:0 4px 16px rgba(255,179,0,0.35);transition:all 0.2s;letter-spacing:0.3px;}
-.report-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,179,0,0.45);}
-.report-btn:active{transform:scale(0.97);}
-.all-done-banner{background:linear-gradient(135deg,#FFD700,#FF6B9D,#C44EFF);border-radius:14px;padding:14px;text-align:center;color:white;font-weight:900;font-size:15px;margin-bottom:10px;animation:bounce-in 0.5s ease;box-shadow:0 4px 16px rgba(0,0,0,0.15);}
-.shop-body{}
-.pts-hero{background:linear-gradient(135deg,#2D1B69,#C44EFF);border-radius:18px;padding:18px;color:white;text-align:center;margin-bottom:14px;position:relative;overflow:hidden;}
-.pts-hero-num{font-size:42px;font-weight:900;letter-spacing:-1px;animation:rainbow-text 3s infinite;}
-.pts-hero-sub{font-size:11px;opacity:0.8;margin-top:2px;}
-.shop-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
-.shop-card{background:white;border-radius:16px;padding:13px;text-align:center;box-shadow:0 3px 12px rgba(0,0,0,0.08);cursor:pointer;transition:all 0.25s;border:2px solid #F0E8FF;position:relative;overflow:hidden;}
-.shop-card:hover{border-color:#C44EFF;transform:translateY(-3px);box-shadow:0 8px 24px rgba(196,78,255,0.2);}
-.shop-card:active{transform:scale(0.96);}
-.shop-card-icon{font-size:30px;margin-bottom:5px;display:block;transition:transform 0.3s;}
-.shop-card:hover .shop-card-icon{animation:wobble 0.5s ease;}
-.shop-card-name{font-size:12px;font-weight:700;color:#333;margin-bottom:4px;}
-.shop-card-pts{display:inline-block;background:linear-gradient(135deg,#FFD700,#FFA500);color:#7A3A00;border-radius:8px;padding:3px 8px;font-size:10px;font-weight:900;margin-bottom:3px;}
-.shop-card-desc{font-size:10px;color:#aaa;}
-.shop-card-edit-btn{position:absolute;top:7px;right:7px;background:rgba(196,78,255,0.1);border:none;border-radius:8px;width:22px;height:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;transition:all 0.2s;color:#C44EFF;}
-.shop-card-edit-btn:hover{background:rgba(196,78,255,0.25);transform:scale(1.15);}
-.add-shop-btn{width:100%;background:linear-gradient(135deg,#F0E8FF,#FFE8F5);border:2px dashed #C44EFF;border-radius:16px;padding:14px;text-align:center;cursor:pointer;transition:all 0.2s;color:#C44EFF;font-weight:700;font-size:13px;font-family:inherit;}
-.add-shop-btn:hover{background:linear-gradient(135deg,#E8D5FF,#FFD5EE);transform:scale(1.01);}
-.modal-wrap{min-height:600px;display:flex;align-items:center;justify-content:center;background:rgba(20,0,60,0.7);border-radius:20px;}
-.modal-box{background:white;border-radius:24px;padding:24px;width:88%;max-width:340px;animation:slide-up 0.35s cubic-bezier(.4,0,.2,1);}
-.modal-close-btn{background:linear-gradient(135deg,#C44EFF,#FF6B9D);color:white;border:none;border-radius:14px;padding:13px;font-size:14px;font-weight:900;cursor:pointer;width:100%;margin-top:14px;font-family:inherit;transition:all 0.2s;}
-.modal-close-btn:hover{transform:scale(1.02);}
-.modal-close-btn:active{transform:scale(0.97);}
-.kakao-box{background:#FEE500;border-radius:16px;padding:14px;}
-.kakao-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-weight:900;font-size:13px;color:#3C1E1E;}
-.kakao-msg{background:white;border-radius:12px;padding:13px;font-size:11px;line-height:1.75;color:#333;white-space:pre-line;}
-.confetti-piece{position:absolute;pointer-events:none;animation:confetti-fall 0.8s ease-out forwards;}
-.fly-pts{position:absolute;pointer-events:none;font-size:16px;font-weight:900;color:#FF6B9D;text-shadow:0 0 8px rgba(255,107,157,0.5);animation:point-fly 1.1s ease-out forwards;z-index:20;}
-.star-burst{position:absolute;pointer-events:none;font-size:20px;animation:star-pop 0.6s ease-out forwards;}
-.shine-sweep{position:absolute;top:0;left:-120%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.6),transparent);animation:shine 0.55s ease-out forwards;pointer-events:none;}
-@keyframes shine{to{left:200%;}}
-.edit-input-row{display:flex;flex-direction:column;gap:8px;margin:8px 0;}
-.edit-input-row input{border:2px solid #E8D5FF;border-radius:10px;padding:8px 12px;font-size:13px;font-family:inherit;outline:none;}
-.edit-input-row input:focus{border-color:#C44EFF;}
-.edit-label{font-size:11px;color:#999;font-weight:700;margin-bottom:2px;}
-.icon-picker{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0;}
-.icon-opt{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;border:2px solid transparent;background:#F5F0FF;transition:all 0.2s;}
-.icon-opt:hover,.icon-opt.sel{border-color:#C44EFF;background:#EED5FF;transform:scale(1.15);}
+*{font-family:'Noto Sans KR',sans-serif;box-sizing:border-box;}
+body{margin:0;background:linear-gradient(135deg,#2D1B69 0%,#6B35A8 60%,#FF7EB3 100%);min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:16px 0;}
+#root{width:100%;max-width:480px;}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes bounce-in{0%{transform:scale(0) rotate(-10deg);opacity:0}60%{transform:scale(1.2) rotate(3deg)}100%{transform:scale(1);opacity:1}}
+@keyframes slide-up{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes point-fly{0%{transform:translateY(0) scale(.5);opacity:0}30%{transform:translateY(-15px) scale(1.4);opacity:1}100%{transform:translateY(-55px) scale(1);opacity:0}}
+@keyframes star-pop{0%{transform:scale(0);opacity:1}50%{transform:scale(1.5)}100%{transform:scale(1);opacity:0}}
+@keyframes pulse-glow{0%,100%{box-shadow:0 0 0 0 rgba(255,200,0,.5)}50%{box-shadow:0 0 0 8px rgba(255,200,0,0)}}
+@keyframes rainbow{0%{color:#ff6b9d}25%{color:#ffd700}50%{color:#7effd4}75%{color:#c44eff}100%{color:#ff6b9d}}
+@keyframes wobble{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+@keyframes shine{to{left:200%}}
+@keyframes kakao-bounce{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.coin-pill{animation:pulse-glow 2s infinite;}
+.pts-num{animation:rainbow 3s infinite;}
+.float-icon{animation:float 2s infinite;}
+.bounce-in{animation:bounce-in .5s ease;}
+.slide-up{animation:slide-up .35s cubic-bezier(.4,0,.2,1);}
+.point-fly{animation:point-fly 1.1s ease-out forwards;}
+.star-pop{animation:star-pop .6s ease-out forwards;}
+.quest-card{transition:all .3s cubic-bezier(.4,0,.2,1);}
+.quest-card:hover{transform:translateY(-2px) scale(1.01);}
+.quest-card:active{transform:scale(.98);}
+.shop-card{transition:all .25s;}
+.shop-card:hover{transform:translateY(-3px);}
+.check-circle{transition:all .35s cubic-bezier(.4,0,.2,1);}
+.check-done{background:linear-gradient(135deg,#4CAF50,#00BFA5)!important;border-color:transparent!important;animation:wobble .5s ease;}
+.prog-fill{transition:width .6s cubic-bezier(.4,0,.2,1);}
+.prog-fill::after{content:'';position:absolute;right:0;top:0;width:12px;height:12px;background:white;border-radius:50%;box-shadow:0 0 6px rgba(196,78,255,.8);}
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(20,0,60,.75);display:flex;align-items:center;justify-content:center;z-index:999;}
+.kakao-send-btn{animation:kakao-bounce 2s infinite;}
+.particle-wrap{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;overflow:hidden;}
 </style>
-
-<div id="qa2">
-<div class="sky" id="qa2-inner" style="position:relative;"></div>
-</div>
-
-<script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useRef,useCallback,useEffect}=React;
 const TODAY=new Date();
 const DATESTR=`${TODAY.getFullYear()}년 ${TODAY.getMonth()+1}월 ${TODAY.getDate()}일 (${['일','월','화','수','목','금','토'][TODAY.getDay()]}요일)`;
-const QUEST_ICONS=['📚','✏️','📖','🏃','🤸','🎨','🎵','💻','📗','🔬','🌟','🎯','💪','🧩','🎤'];
-
-const baseQuests=[
+const QUEST_ICONS=['📚','✏️','📖','🏃','🤸','🎨','🎵','💻','📗','🔬','🌟','🎯','💪','🧩','🎤','🌈','⚡','🔥'];
+const BASE_QUESTS=[
   {id:1,text:'인도네시아 시험공부',done:false,icon:'📚'},
   {id:2,text:'수학 ppt 만들기',done:false,icon:'💻'},
   {id:3,text:'영어 리딩 시험 준비',done:false,icon:'📖'},
@@ -125,287 +60,356 @@ const baseQuests=[
   {id:6,text:'30분 줄넘기',done:false,icon:'🏃'},
   {id:7,text:'10분 스트레칭',done:false,icon:'🤸'},
 ];
+const INIT_SHOP=[
+  {icon:'💵',name:'용돈 500원',pts:10,desc:'포인트 10개 교환'},
+  {icon:'☕',name:'카페 스탬프',pts:15,desc:'메가커피 1잔 쿠폰'},
+  {icon:'🎮',name:'게임 30분',pts:8,desc:'게임 시간 보너스'},
+  {icon:'🍕',name:'치킨 한 조각',pts:20,desc:'저녁 메뉴 선택권'},
+  {icon:'📱',name:'유튜브 1시간',pts:12,desc:'영상 시청 보너스'},
+  {icon:'🛍️',name:'용돈 1000원',pts:20,desc:'포인트 20개 교환'},
+];
+const SHOP_ICONS=['💵','💰','☕','🎮','🍕','📱','🛍️','🎁','🍦','🎪','🎡','🎠','🧸','🎀','🍰','🍟','🎈','⭐'];
 
-let S={
-  activeProfile:0,
-  activeTab:'quest',
-  profiles:[
-    {id:0,name:'첫째',emoji:'🐰',totalPoints:18,quests:JSON.parse(JSON.stringify(baseQuests))},
-    {id:1,name:'둘째',emoji:'🐶',totalPoints:12,quests:JSON.parse(JSON.stringify(baseQuests.slice(0,4)))},
-  ],
-  modal:null,
-  newQuestText:'',
-  newQuestIcon:'📝',
-  nextId:30,
-  shopItems:[
-    {icon:'💵',name:'용돈 500원',pts:10,desc:'포인트 10개 교환'},
-    {icon:'☕',name:'카페 스탬프',pts:15,desc:'메가커피 1잔 쿠폰'},
-    {icon:'🎮',name:'게임 30분',pts:8,desc:'게임 시간 보너스'},
-    {icon:'🍕',name:'치킨 한 조각',pts:20,desc:'저녁 메뉴 선택권'},
-    {icon:'📱',name:'유튜브 1시간',pts:12,desc:'영상 시청 보너스'},
-    {icon:'🛍️',name:'용돈 1000원',pts:20,desc:'포인트 20개 교환'},
-  ],
-  editShopIdx:null,
-  editShopDraft:{},
-};
+// 카카오 설정
+const KAKAO_ACCESS_TOKEN='SnLWFwKwrhCBFdibWeka8NjXTik4d40fAAAAAQoXAc8AAAGefvlWC3LErHmNOyL0';
+const KAKAO_REFRESH_TOKEN='peFtP2rnmy9QFyQU8JptComIRf9t2EDqAAAAAgoXAc8AAAGefvlWB3LErHmNOyL0';
+const REST_API_KEY='7baa4386e5393747c7969595e81e97fd';
+const CLIENT_SECRET='WwDh4YNWrKI1L6K2q7ovEnuD0n6CvoCR';
 
-function cur(){return S.profiles[S.activeProfile];}
+function Particle({x,y,emoji,onDone}){
+  useEffect(()=>{const t=setTimeout(onDone,900);return()=>clearTimeout(t);},[]);
+  return <div className="star-pop" style={{position:'absolute',left:x,top:y,fontSize:18,pointerEvents:'none',zIndex:20}}>{emoji}</div>;
+}
 
-function render(){
-  const p=cur();
-  const done=p.quests.filter(q=>q.done).length;
-  const total=p.quests.length;
+// 카카오 나에게 보내기
+async function sendKakaoMessage(message, accessToken) {
+  const templateObj = {
+    object_type: 'text',
+    text: message,
+    link: { web_url: 'https://raraland-2004.github.io/request/', mobile_web_url: 'https://raraland-2004.github.io/request/' },
+    button_title: '퀘스트 앱 열기'
+  };
+  const res = await fetch('https://kapi.kakao.com/v2/api/talk/memo/default/send', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: new URLSearchParams({ template_object: JSON.stringify(templateObj) })
+  });
+  return await res.json();
+}
+
+// 토큰 갱신
+async function refreshAccessToken(refreshToken) {
+  const res = await fetch('https://kauth.kakao.com/oauth/token', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: new URLSearchParams({
+      grant_type: 'refresh_token',
+      client_id: REST_API_KEY,
+      client_secret: CLIENT_SECRET,
+      refresh_token: refreshToken,
+    })
+  });
+  return await res.json();
+}
+
+function App(){
+  const [profiles,setProfiles]=useState([
+    {id:0,name:'첫째',emoji:'🐰',totalPoints:18,quests:JSON.parse(JSON.stringify(BASE_QUESTS))},
+    {id:1,name:'둘째',emoji:'🐶',totalPoints:12,quests:JSON.parse(JSON.stringify(BASE_QUESTS.slice(0,4)))},
+  ]);
+  const [activeProf,setActiveProf]=useState(0);
+  const [activeTab,setActiveTab]=useState('quest');
+  const [modal,setModal]=useState(null);
+  const [shopItems,setShopItems]=useState(INIT_SHOP);
+  const [newText,setNewText]=useState('');
+  const [newIcon,setNewIcon]=useState('📝');
+  const [showIconPicker,setShowIconPicker]=useState(false);
+  const [particles,setParticles]=useState([]);
+  const [editDraft,setEditDraft]=useState({});
+  const [kakaoToken,setKakaoToken]=useState(KAKAO_ACCESS_TOKEN);
+  const [sendingKakao,setSendingKakao]=useState(false);
+  const [kakaoResult,setKakaoResult]=useState(null);
+  const nextId=useRef(50);
+  const inputRef=useRef();
+
+  const cur=profiles[activeProf];
+  const done=cur.quests.filter(q=>q.done).length;
+  const total=cur.quests.length;
   const pct=total?Math.round(done/total*100):0;
   const allDone=total>0&&done===total;
 
-  let h=`
-  <div class="qa-header">
-    <div class="qa-date">📅 ${DATESTR}</div>
-    <div class="qa-title-row">
-      <div class="qa-title">✨ 데일리 퀘스트</div>
-      <div class="coin-pill" onclick="goShop()">
-        🪙 <span id="pts-num">${p.totalPoints}</span> P
-      </div>
-    </div>
-  </div>
-  <div class="qa-profiles">
-    ${S.profiles.map((pr,i)=>`
-      <div class="prof-btn${i===S.activeProfile?' active':''}" onclick="switchProf(${i})">
-        <span class="prof-avatar">${pr.emoji}</span>
-        ${pr.name}
-        <span class="prof-pts-badge">🪙${pr.totalPoints}</span>
-      </div>`).join('')}
-  </div>
-  <div class="qa-tabs">
-    <div class="qa-tab${S.activeTab==='quest'?' active':''}" onclick="switchTab('quest')">⚔️ 퀘스트</div>
-    <div class="qa-tab${S.activeTab==='shop'?' active':''}" onclick="switchTab('shop')">🏪 보상 상점</div>
-  </div>
-  <div class="qa-body">
-  `;
+  // 저녁 9시 자동 발송 체크
+  useEffect(()=>{
+    const check=setInterval(()=>{
+      const now=new Date();
+      if(now.getHours()===21&&now.getMinutes()===0){
+        profiles.forEach(p=>sendReport(p, kakaoToken));
+      }
+    },60000);
+    return()=>clearInterval(check);
+  },[profiles, kakaoToken]);
 
-  if(S.activeTab==='quest'){
-    h+=`<div class="prog-wrap">
-      <div class="prog-info"><span>진행 ${done}/${total} 퀘스트 🗡️</span><span style="color:#C44EFF;font-weight:900;">${pct}%</span></div>
-      <div class="prog-track"><div class="prog-fill" style="width:${pct}%"></div></div>
-    </div>`;
-    if(allDone) h+=`<div class="all-done-banner">🎉 와! 오늘 모든 퀘스트 클리어! 대단해요! 🏆</div>`;
-    h+=p.quests.map(q=>`
-      <div class="quest-card${q.done?' done':''}" id="qc-${q.id}" onclick="toggleQuest(${q.id})">
-        <div class="check-circle">${q.done?'✓':''}</div>
-        <div class="q-icon">${q.icon}</div>
-        <div class="q-text">${q.text}</div>
-        <div class="q-pts">${q.done?'✅ 완료':'⚡+2P'}</div>
-        <button class="del-btn" onclick="delQuest(event,${q.id})">✕</button>
-      </div>`).join('');
-    h+=`<div class="add-area">
-      <div style="font-size:11px;font-weight:700;color:#C44EFF;margin-bottom:8px;">➕ 새 퀘스트 추가</div>
-      <div class="add-row">
-        <div class="add-icon-sel" id="icon-picker-btn" onclick="toggleIconPicker()" title="아이콘 선택">${S.newQuestIcon}</div>
-        <input class="add-input" id="nqi" type="text" placeholder="할 일을 입력하세요..." value="${S.newQuestText.replace(/"/g,'&quot;')}" oninput="S.newQuestText=this.value" onkeydown="if(event.key==='Enter')addQuest()">
-        <button class="add-btn" onclick="addQuest()">추가!</button>
-      </div>
-      <div id="icon-picker-wrap" style="display:none;margin-top:8px;">
-        <div class="icon-picker">${QUEST_ICONS.map(ic=>`<div class="icon-opt${S.newQuestIcon===ic?' sel':''}" onclick="pickIcon('${ic}')">${ic}</div>`).join('')}</div>
-      </div>
-    </div>
-    <button class="report-btn" onclick="openReport()">📤 카카오톡 리포트 미리보기</button>`;
-  } else {
-    h+=`<div class="shop-body">
-      <div class="pts-hero">
-        <div style="font-size:12px;opacity:0.85;margin-bottom:4px;">💎 ${p.name}의 총 포인트</div>
-        <div class="pts-hero-num">🪙 ${p.totalPoints} P</div>
-        <div class="pts-hero-sub">퀘스트를 클리어하면 포인트가 쌓여요!</div>
-      </div>
-      <div class="shop-grid">
-        ${S.shopItems.map((item,i)=>`
-          <div class="shop-card" onclick="buyItem(${i})">
-            <button class="shop-card-edit-btn" onclick="openEditShop(event,${i})">✏️</button>
-            <span class="shop-card-icon">${item.icon}</span>
-            <div class="shop-card-name">${item.name}</div>
-            <div class="shop-card-pts">🪙 ${item.pts}P</div>
-            <div class="shop-card-desc">${item.desc}</div>
-          </div>`).join('')}
-      </div>
-      <button class="add-shop-btn" onclick="openAddShop()">✨ 새 보상 추가하기</button>
-    </div>`;
-  }
-  h+=`</div>`;
-
-  if(S.modal){
-    const m=S.modal;
-    let mh='';
-    if(m.type==='report'){
-      const doneQ=p.quests.filter(q=>q.done);
-      mh=`<div style="text-align:center;font-size:13px;font-weight:700;color:#555;margin-bottom:4px;">📱 카카오톡 발송 미리보기</div>
-        <div style="font-size:11px;color:#aaa;text-align:center;margin-bottom:12px;">저녁 9시에 자동으로 전송돼요</div>
-        <div class="kakao-box">
-          <div class="kakao-header">💬 데일리 퀘스트 알림봇</div>
-          <div class="kakao-msg">[🎮 ${p.name} 퀘스트 결과]
+  const buildReportMsg=(p)=>{
+    const doneQ=p.quests.filter(q=>q.done);
+    const undoneQ=p.quests.filter(q=>!q.done);
+    const pct2=p.quests.length?Math.round(doneQ.length/p.quests.length*100):0;
+    return `[🎮 ${p.name} 데일리 퀘스트 결과]
 📅 ${DATESTR}
 
 ✅ 완료 (${doneQ.length}/${p.quests.length}개)
 ${doneQ.length?doneQ.map(q=>`  ${q.icon} ${q.text}`).join('\n'):'  아직 없어요'}
-${p.quests.filter(q=>!q.done).length?`\n⏳ 미완료\n${p.quests.filter(q=>!q.done).map(q=>`  ${q.icon} ${q.text}`).join('\n')}`:''}
+${undoneQ.length?`\n⏳ 미완료\n${undoneQ.map(q=>`  ${q.icon} ${q.text}`).join('\n')}`:''}
 
 🪙 오늘 획득: +${doneQ.length*2}P
 💎 누적 포인트: ${p.totalPoints}P
 
-${pct===100?'🌟 완벽 클리어! 칭찬해 주세요! 🎉':'💪 내일도 함께 화이팅!'}</div>
-        </div>
-        <button class="modal-close-btn" onclick="closeModal()">닫기 ✕</button>`;
-    } else if(m.type==='buy'){
-      const item=S.shopItems[m.idx];
-      const ok=p.totalPoints>=item.pts;
-      mh=`<div style="text-align:center;font-size:52px;margin-bottom:6px;animation:float 2s infinite">${item.icon}</div>
-        <div style="text-align:center;font-size:17px;font-weight:900;color:#333;margin-bottom:3px;">${item.name}</div>
-        <div style="text-align:center;font-size:12px;color:#aaa;margin-bottom:12px;">${item.desc}</div>
-        <div style="background:linear-gradient(135deg,#FFF9E6,#FFF0F5);border-radius:14px;padding:14px;text-align:center;margin-bottom:12px;">
-          <div style="font-size:11px;color:#aaa;margin-bottom:4px;">필요 포인트</div>
-          <div style="font-size:30px;font-weight:900;color:#FF6B9D;">🪙 ${item.pts}P</div>
-          <div style="font-size:11px;color:#bbb;margin-top:3px;">보유 ${p.totalPoints}P → 교환 후 ${p.totalPoints-item.pts}P</div>
-        </div>
-        ${!ok?`<div style="background:#FFF0F0;border-radius:10px;padding:9px;text-align:center;font-size:12px;color:#E53935;margin-bottom:6px;">😢 포인트가 부족해요! 퀘스트를 더 클리어해봐요!</div>`:''}
-        <div style="display:flex;gap:8px;">
-          <button style="flex:1;padding:12px;border-radius:12px;border:2px solid #EEE;background:white;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;" onclick="closeModal()">취소</button>
-          <button class="modal-close-btn" style="flex:1;margin:0;${!ok?'background:#CCC;color:#999;':''}" onclick="${ok?'confirmBuy('+m.idx+')':'void 0'}">${ok?'교환 신청 🎉':'포인트 부족'}</button>
-        </div>`;
-    } else if(m.type==='bought'){
-      const item=S.shopItems[m.idx];
-      mh=`<div style="text-align:center;font-size:60px;margin-bottom:8px;animation:float 2s infinite">🎉</div>
-        <div style="text-align:center;font-size:17px;font-weight:900;color:#333;margin-bottom:8px;">교환 신청 완료!</div>
-        <div style="text-align:center;font-size:13px;color:#888;line-height:1.7;margin-bottom:4px;"><strong style="color:#C44EFF;">${item.name}</strong> 교환을<br>부모님께 요청했어요! 😄<br><span style="font-size:11px;">(부모님 승인 후 지급됩니다)</span></div>
-        <button class="modal-close-btn" onclick="closeModal()">확인! 🌟</button>`;
-    } else if(m.type==='editshop'||m.type==='addshop'){
-      const isAdd=m.type==='addshop';
-      const d=S.editShopDraft;
-      mh=`<div style="font-size:16px;font-weight:900;color:#333;margin-bottom:4px;">${isAdd?'✨ 새 보상 추가':'✏️ 보상 수정'}</div>
-        <div style="font-size:11px;color:#aaa;margin-bottom:12px;">${isAdd?'부모님이 직접 보상을 만들어요!':'보상 정보를 수정해요'}</div>
-        <div class="edit-input-row">
-          <div class="edit-label">아이콘 선택</div>
-          <div class="icon-picker">${['💵','💰','☕','🎮','🍕','📱','🛍️','🎁','🍦','🎪','🎡','🎠','🧸','🎀','🍰','🍟','🎈','⭐'].map(ic=>`<div class="icon-opt${d.icon===ic?' sel':''}" onclick="setDraftIcon('${ic}')">${ic}</div>`).join('')}</div>
-        </div>
-        <div class="edit-input-row">
-          <div class="edit-label">보상 이름</div>
-          <input id="si-name" value="${(d.name||'').replace(/"/g,'&quot;')}" placeholder="예: 용돈 500원" oninput="S.editShopDraft.name=this.value">
-        </div>
-        <div class="edit-input-row">
-          <div class="edit-label">필요 포인트</div>
-          <input id="si-pts" type="number" value="${d.pts||10}" min="1" oninput="S.editShopDraft.pts=parseInt(this.value)||1">
-        </div>
-        <div class="edit-input-row">
-          <div class="edit-label">설명</div>
-          <input id="si-desc" value="${(d.desc||'').replace(/"/g,'&quot;')}" placeholder="예: 포인트 10개 교환" oninput="S.editShopDraft.desc=this.value">
-        </div>
-        <div style="display:flex;gap:8px;margin-top:4px;">
-          ${!isAdd?`<button style="flex:1;padding:12px;border-radius:12px;border:2px solid #FFB3B3;background:#FFF5F5;font-size:13px;font-weight:700;cursor:pointer;color:#E53935;font-family:inherit;" onclick="delShopItem(${m.idx})">삭제 🗑️</button>`:''}
-          <button style="flex:1;padding:12px;border-radius:12px;border:2px solid #EEE;background:white;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;" onclick="closeModal()">취소</button>
-          <button class="modal-close-btn" style="flex:1;margin:0;" onclick="saveShopItem(${m.idx})">저장 ✅</button>
-        </div>`;
-    }
-    h+=`<div class="modal-wrap"><div class="modal-box">${mh}</div></div>`;
-  }
+${pct2===100?'🌟 완벽 클리어! 칭찬해 주세요! 🎉':'💪 내일도 함께 화이팅!'}`;
+  };
 
-  document.getElementById('qa2-inner').innerHTML=h;
-}
-
-function switchProf(i){S.activeProfile=i;S.activeTab='quest';S.modal=null;render();}
-function switchTab(t){S.activeTab=t;S.modal=null;render();}
-function goShop(){S.activeTab='shop';S.modal=null;render();}
-function closeModal(){S.modal=null;render();}
-
-function toggleIconPicker(){
-  const w=document.getElementById('icon-picker-wrap');
-  if(w) w.style.display=w.style.display==='none'?'block':'none';
-}
-function pickIcon(ic){S.newQuestIcon=ic;render();}
-
-function toggleQuest(id){
-  const p=cur();
-  const q=p.quests.find(x=>x.id===id);
-  if(!q) return;
-  if(!q.done){
-    q.done=true;
-    p.totalPoints+=2;
-    const el=document.getElementById('qc-'+id);
-    if(el){
-      el.classList.add('completing');
-      const shine=document.createElement('div');shine.className='shine-sweep';el.appendChild(shine);
-      const fly=document.createElement('div');fly.className='fly-pts';fly.textContent='+2 Point! ⭐';
-      fly.style.left='40%';fly.style.top='5px';el.appendChild(fly);
-      const emojis=['⭐','✨','💫','🌟','💥'];
-      emojis.forEach((em,i)=>{
-        setTimeout(()=>{
-          const s=document.createElement('div');s.className='star-burst';s.textContent=em;
-          s.style.left=(15+i*15)+'px';s.style.top='0px';el.appendChild(s);
-          setTimeout(()=>s.remove(),650);
-        },i*70);
-      });
-      const confColors=['#FF6B9D','#FFD700','#C44EFF','#7EFFD4','#FF8C42'];
-      for(let i=0;i<8;i++){
-        setTimeout(()=>{
-          const c=document.createElement('div');c.className='confetti-piece';
-          c.textContent=['🎊','🎉','⭐','✨'][i%4];
-          c.style.left=Math.random()*80+10+'%';c.style.top='0';c.style.fontSize='14px';
-          el.appendChild(c);setTimeout(()=>c.remove(),900);
-        },i*50);
+  const sendReport=async(p, token)=>{
+    setSendingKakao(true);
+    setKakaoResult(null);
+    try{
+      const msg=buildReportMsg(p);
+      let result=await sendKakaoMessage(msg, token);
+      // 토큰 만료시 갱신 후 재시도
+      if(result.code===-401){
+        const refreshed=await refreshAccessToken(KAKAO_REFRESH_TOKEN);
+        if(refreshed.access_token){
+          setKakaoToken(refreshed.access_token);
+          result=await sendKakaoMessage(msg, refreshed.access_token);
+        }
       }
-      setTimeout(()=>{el.classList.remove('completing');render();},420);
-    } else render();
-  } else {
-    q.done=false;p.totalPoints=Math.max(0,p.totalPoints-2);render();
-  }
-}
+      if(result.result_code===0){
+        setKakaoResult({success:true, name:p.name});
+      } else {
+        setKakaoResult({success:false, msg:JSON.stringify(result)});
+      }
+    }catch(e){
+      setKakaoResult({success:false, msg:e.message});
+    }
+    setSendingKakao(false);
+  };
 
-function delQuest(e,id){
-  e.stopPropagation();
-  const p=cur();
-  p.quests=p.quests.filter(q=>q.id!==id);
-  render();
-}
+  const toggleQuest=useCallback((id)=>{
+    setProfiles(prev=>{
+      const next=JSON.parse(JSON.stringify(prev));
+      const p=next[activeProf];
+      const q=p.quests.find(x=>x.id===id);
+      if(!q)return prev;
+      if(!q.done){
+        q.done=true;p.totalPoints+=2;
+        const emojis=['⭐','✨','💫','🌟','💥','🎉','🎊'];
+        setParticles(ps=>[...ps,...emojis.map((em,i)=>({id:Date.now()+i,x:40+i*30+Math.random()*20,y:20+Math.random()*30,emoji:em}))]);
+      }else{q.done=false;p.totalPoints=Math.max(0,p.totalPoints-2);}
+      return next;
+    });
+  },[activeProf]);
 
-function addQuest(){
-  const el=document.getElementById('nqi');
-  const txt=(el?el.value:S.newQuestText).trim();
-  if(!txt) return;
-  cur().quests.push({id:S.nextId++,text:txt,done:false,icon:S.newQuestIcon});
-  S.newQuestText='';
-  render();
-}
+  const removeParticle=(id)=>setParticles(ps=>ps.filter(p=>p.id!==id));
+  const delQuest=(e,id)=>{e.stopPropagation();setProfiles(prev=>{const next=JSON.parse(JSON.stringify(prev));next[activeProf].quests=next[activeProf].quests.filter(q=>q.id!==id);return next;});};
+  const addQuest=()=>{const txt=(inputRef.current?.value||newText).trim();if(!txt)return;setProfiles(prev=>{const next=JSON.parse(JSON.stringify(prev));next[activeProf].quests.push({id:nextId.current++,text:txt,done:false,icon:newIcon});return next;});setNewText('');if(inputRef.current)inputRef.current.value='';setShowIconPicker(false);};
+  const confirmBuy=(idx)=>{setProfiles(prev=>{const next=JSON.parse(JSON.stringify(prev));next[activeProf].totalPoints-=shopItems[idx].pts;return next;});setModal({type:'bought',idx});};
+  const saveShop=(idx)=>{const nm=editDraft.name?.trim();const pts=parseInt(editDraft.pts)||1;const desc=editDraft.desc?.trim()||'';if(!nm){alert('보상 이름을 입력해주세요!');return;}if(idx===-1){setShopItems(s=>[...s,{icon:editDraft.icon||'🎁',name:nm,pts,desc}]);}else{setShopItems(s=>s.map((it,i)=>i===idx?{icon:editDraft.icon||it.icon,name:nm,pts,desc}:it));}setModal(null);};
+  const delShop=(idx)=>{if(confirm('이 보상을 삭제할까요?')){setShopItems(s=>s.filter((_,i)=>i!==idx));setModal(null);}};
+  const openEditShop=(e,idx)=>{e.stopPropagation();const item=shopItems[idx];setEditDraft({icon:item.icon,name:item.name,pts:item.pts,desc:item.desc});setModal({type:'editshop',idx});};
+  const openAddShop=()=>{setEditDraft({icon:'🎁',name:'',pts:10,desc:''});setModal({type:'addshop',idx:-1});};
 
-function openReport(){S.modal={type:'report'};render();}
-function buyItem(i){S.modal={type:'buy',idx:i};render();}
-function confirmBuy(i){
-  S.profiles[S.activeProfile].totalPoints-=S.shopItems[i].pts;
-  S.modal={type:'bought',idx:i};render();
-}
+  return(
+    <div className="w-full max-w-md mx-auto rounded-3xl overflow-hidden shadow-2xl" style={{background:'rgba(255,255,255,0.97)'}}>
+      {/* 헤더 */}
+      <div style={{background:'linear-gradient(135deg,#FF6B9D 0%,#C44EFF 100%)',padding:'14px 16px 10px',color:'white'}}>
+        <div style={{fontSize:11,opacity:.8,marginBottom:3}}>📅 {DATESTR}</div>
+        <div className="flex justify-between items-center">
+          <div style={{fontSize:20,fontWeight:900}}>✨ 데일리 퀘스트</div>
+          <div className="coin-pill flex items-center gap-1 cursor-pointer" onClick={()=>setActiveTab('shop')}
+            style={{background:'linear-gradient(135deg,#FFD700,#FFA500)',borderRadius:20,padding:'7px 14px',fontWeight:900,fontSize:15,color:'#7A3A00'}}>
+            🪙 {cur.totalPoints} P
+          </div>
+        </div>
+      </div>
 
-function openEditShop(e,i){
-  e.stopPropagation();
-  const item=S.shopItems[i];
-  S.editShopDraft={icon:item.icon,name:item.name,pts:item.pts,desc:item.desc};
-  S.modal={type:'editshop',idx:i};render();
-}
-function openAddShop(){
-  S.editShopDraft={icon:'🎁',name:'',pts:10,desc:''};
-  S.modal={type:'addshop',idx:-1};render();
-}
-function setDraftIcon(ic){S.editShopDraft.icon=ic;render();}
-function saveShopItem(idx){
-  const d=S.editShopDraft;
-  const nm=(document.getElementById('si-name')?.value||d.name||'').trim();
-  const pts=parseInt(document.getElementById('si-pts')?.value||d.pts)||1;
-  const desc=(document.getElementById('si-desc')?.value||d.desc||'').trim();
-  if(!nm){alert('보상 이름을 입력해주세요!');return;}
-  if(idx===-1){
-    S.shopItems.push({icon:d.icon,name:nm,pts:pts,desc:desc});
-  } else {
-    S.shopItems[idx]={icon:d.icon,name:nm,pts:pts,desc:desc};
-  }
-  S.modal=null;render();
-}
-function delShopItem(i){
-  if(confirm('이 보상을 삭제할까요?')){S.shopItems.splice(i,1);S.modal=null;render();}
-}
+      {/* 프로필 */}
+      <div className="flex gap-2 px-4 pt-3 pb-1" style={{background:'linear-gradient(135deg,#FF6B9D,#C44EFF)'}}>
+        {profiles.map((p,i)=>(
+          <button key={p.id} onClick={()=>{setActiveProf(i);setActiveTab('quest');setModal(null);}} className="flex items-center gap-2 px-3 py-2 rounded-2xl text-xs font-bold"
+            style={i===activeProf?{background:'rgba(255,255,255,.95)',color:'#6B35A8',border:'2px solid white',boxShadow:'0 4px 16px rgba(0,0,0,.25)',transform:'translateY(-2px)',transition:'all .25s'}:{background:'rgba(255,255,255,.15)',color:'rgba(255,255,255,.8)',border:'2px solid rgba(255,255,255,.2)',transition:'all .25s'}}>
+            <span style={{fontSize:16}}>{p.emoji}</span>{p.name}
+            <span style={{fontSize:10,background:i===activeProf?'linear-gradient(135deg,#FFD700,#FFA500)':'rgba(255,200,0,.7)',color:'#7A3A00',borderRadius:8,padding:'1px 6px',fontWeight:900}}>🪙{p.totalPoints}</span>
+          </button>
+        ))}
+      </div>
 
-render();
+      {/* 탭 */}
+      <div className="flex px-4 pt-2" style={{background:'linear-gradient(135deg,#FF6B9D,#C44EFF)'}}>
+        {[['quest','⚔️ 퀘스트'],['shop','🏪 보상 상점'],['kakao','💬 카카오']].map(([key,label])=>(
+          <button key={key} onClick={()=>{setActiveTab(key);setModal(null);}} className="px-4 py-2 text-xs font-bold rounded-t-xl"
+            style={activeTab===key?{color:'white',background:'rgba(255,255,255,.2)',border:'1px solid rgba(255,255,255,.25)',borderBottom:'none',transition:'all .2s'}:{color:'rgba(255,255,255,.55)',background:'transparent',border:'none',transition:'all .2s'}}>{label}</button>
+        ))}
+      </div>
+
+      {/* 바디 */}
+      <div className="p-4 overflow-y-auto" style={{minHeight:400,maxHeight:'70vh'}}>
+
+        {/* 퀘스트 탭 */}
+        {activeTab==='quest'&&(
+          <>
+            <div className="mb-3">
+              <div className="flex justify-between text-xs mb-1" style={{color:'#999'}}>
+                <span>진행 {done}/{total} 퀘스트 🗡️</span>
+                <span style={{color:'#C44EFF',fontWeight:900}}>{pct}%</span>
+              </div>
+              <div style={{background:'#EEE',borderRadius:10,height:12,overflow:'hidden',position:'relative'}}>
+                <div className="prog-fill" style={{width:`${pct}%`,height:'100%',borderRadius:10,background:'linear-gradient(90deg,#FF6B9D,#C44EFF,#7B68EE)',position:'relative'}}/>
+              </div>
+            </div>
+            {allDone&&<div className="bounce-in text-center text-white font-black text-sm rounded-2xl p-3 mb-3" style={{background:'linear-gradient(135deg,#FFD700,#FF6B9D,#C44EFF)'}}>🎉 오늘 모든 퀘스트 클리어! 대단해요! 🏆</div>}
+            {cur.quests.map(q=>(
+              <div key={q.id} onClick={()=>toggleQuest(q.id)} className="quest-card flex items-center gap-3 rounded-2xl p-3 mb-2 cursor-pointer select-none relative overflow-hidden"
+                style={q.done?{background:'linear-gradient(135deg,#F0FFF8,#E8FFE0)',border:'2px solid #B8EDCC',boxShadow:'0 2px 8px rgba(0,0,0,.05)'}:{background:'white',border:'2px solid #F0E8FF',boxShadow:'0 2px 10px rgba(0,0,0,.07)'}}>
+                <div className="particle-wrap">{particles.map(pt=><Particle key={pt.id} {...pt} onDone={()=>removeParticle(pt.id)}/>)}</div>
+                <div className={`check-circle flex items-center justify-center rounded-full flex-shrink-0 ${q.done?'check-done':''}`} style={{width:28,height:28,border:q.done?'2.5px solid transparent':'2.5px solid #DDD',background:q.done?'':'white',fontSize:14}}>
+                  {q.done&&<span style={{color:'white',fontWeight:900}}>✓</span>}
+                </div>
+                <span style={{fontSize:22,flexShrink:0}}>{q.icon}</span>
+                <span className="flex-1 text-sm font-bold" style={q.done?{textDecoration:'line-through',color:'#bbb'}:{color:'#333'}}>{q.text}</span>
+                <span className="text-xs font-black rounded-xl px-2 py-1 flex-shrink-0" style={q.done?{background:'linear-gradient(135deg,#4CAF50,#00BFA5)',color:'white'}:{background:'linear-gradient(135deg,#FF6B9D,#C44EFF)',color:'white'}}>{q.done?'✅ 완료':'⚡+2P'}</span>
+                <button onClick={(e)=>delQuest(e,q.id)} style={{background:'none',border:'none',color:'#ccc',cursor:'pointer',fontSize:15,lineHeight:1,transition:'color .2s',flexShrink:0}} onMouseEnter={e=>e.target.style.color='#FF5252'} onMouseLeave={e=>e.target.style.color='#ccc'}>✕</button>
+              </div>
+            ))}
+            <div className="mt-3 p-3 rounded-2xl" style={{background:'linear-gradient(135deg,#F8F0FF,#FFF0F8)',border:'2px dashed #E0C8FF'}}>
+              <div className="text-xs font-bold mb-2" style={{color:'#C44EFF'}}>➕ 새 퀘스트 추가</div>
+              <div className="flex gap-2 items-center">
+                <button onClick={()=>setShowIconPicker(s=>!s)} style={{border:'2px solid #E8D5FF',borderRadius:12,padding:8,fontSize:16,background:'white',cursor:'pointer'}}>{newIcon}</button>
+                <input ref={inputRef} type="text" placeholder="할 일을 입력하세요..." defaultValue={newText} onChange={e=>setNewText(e.target.value)} onKeyDown={e=>e.key==='Enter'&&addQuest()} style={{flex:1,border:'2px solid #E8D5FF',borderRadius:12,padding:'9px 13px',fontSize:13,outline:'none',background:'white',fontFamily:'inherit',color:'#333'}}/>
+                <button onClick={addQuest} style={{background:'linear-gradient(135deg,#C44EFF,#FF6B9D)',color:'white',border:'none',borderRadius:12,padding:'9px 16px',fontSize:13,fontWeight:900,cursor:'pointer',whiteSpace:'nowrap',fontFamily:'inherit'}}>추가!</button>
+              </div>
+              {showIconPicker&&<div className="flex flex-wrap gap-1 mt-2">{QUEST_ICONS.map(ic=><div key={ic} onClick={()=>{setNewIcon(ic);setShowIconPicker(false);}} style={{width:32,height:32,border:newIcon===ic?'2px solid #C44EFF':'2px solid transparent',background:newIcon===ic?'#EED5FF':'#F5F0FF',borderRadius:8,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',fontSize:18}}>{ic}</div>)}</div>}
+            </div>
+          </>
+        )}
+
+        {/* 상점 탭 */}
+        {activeTab==='shop'&&(
+          <>
+            <div className="rounded-3xl p-4 text-center mb-4 text-white" style={{background:'linear-gradient(135deg,#2D1B69,#C44EFF)'}}>
+              <div className="text-xs mb-1" style={{opacity:.85}}>💎 {cur.name}의 총 포인트</div>
+              <div className="pts-num text-4xl font-black">🪙 {cur.totalPoints} P</div>
+              <div className="text-xs mt-1" style={{opacity:.75}}>퀘스트를 클리어하면 포인트가 쌓여요!</div>
+            </div>
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              {shopItems.map((item,i)=>(
+                <div key={i} onClick={()=>setModal({type:'buy',idx:i})} className="shop-card bg-white rounded-2xl p-3 text-center cursor-pointer relative" style={{border:'2px solid #F0E8FF',boxShadow:'0 3px 12px rgba(0,0,0,.08)'}}>
+                  <button onClick={(e)=>openEditShop(e,i)} style={{position:'absolute',top:7,right:7,width:22,height:22,fontSize:12,background:'rgba(196,78,255,.1)',border:'none',borderRadius:8,cursor:'pointer',color:'#C44EFF'}}>✏️</button>
+                  <div style={{fontSize:30,marginBottom:5}}>{item.icon}</div>
+                  <div className="text-xs font-bold mb-1" style={{color:'#333'}}>{item.name}</div>
+                  <span style={{background:'linear-gradient(135deg,#FFD700,#FFA500)',color:'#7A3A00',borderRadius:8,padding:'3px 8px',fontSize:10,fontWeight:900}}>🪙 {item.pts}P</span>
+                  <div className="text-xs mt-1" style={{color:'#aaa'}}>{item.desc}</div>
+                </div>
+              ))}
+            </div>
+            <button onClick={openAddShop} style={{width:'100%',background:'linear-gradient(135deg,#F0E8FF,#FFE8F5)',border:'2px dashed #C44EFF',borderRadius:16,padding:14,fontSize:13,fontWeight:700,color:'#C44EFF',cursor:'pointer',fontFamily:'inherit'}}>✨ 새 보상 추가하기</button>
+          </>
+        )}
+
+        {/* 카카오 탭 */}
+        {activeTab==='kakao'&&(
+          <>
+            <div className="rounded-3xl p-5 text-center mb-4" style={{background:'#FEE500'}}>
+              <div style={{fontSize:48,marginBottom:8}}>💬</div>
+              <div className="font-black text-lg mb-2" style={{color:'#3C1E1E'}}>카카오톡 리포트</div>
+              <div className="text-sm" style={{color:'#7A5A00'}}>버튼을 누르면 부모님 카카오톡<br/>"나와의 채팅"으로 결과가 전송돼요!</div>
+            </div>
+
+            {/* 자녀별 전송 버튼 */}
+            {profiles.map((p,i)=>(
+              <div key={i} className="rounded-2xl p-4 mb-3 bg-white" style={{border:'2px solid #FEE500',boxShadow:'0 3px 12px rgba(0,0,0,.08)'}}>
+                <div className="flex items-center gap-3 mb-3">
+                  <span style={{fontSize:28}}>{p.emoji}</span>
+                  <div>
+                    <div className="font-black" style={{color:'#333'}}>{p.name}</div>
+                    <div className="text-xs" style={{color:'#aaa'}}>완료 {p.quests.filter(q=>q.done).length}/{p.quests.length}개 · 🪙{p.totalPoints}P</div>
+                  </div>
+                </div>
+                <button onClick={()=>sendReport(p, kakaoToken)} disabled={sendingKakao}
+                  className="kakao-send-btn w-full rounded-xl py-3 font-black text-sm"
+                  style={{background:'#FEE500',border:'none',cursor:'pointer',fontFamily:'inherit',color:'#3C1E1E',opacity:sendingKakao?.6:1}}>
+                  {sendingKakao?'⏳ 전송 중...':'📤 '+p.name+' 결과 카카오톡 전송!'}
+                </button>
+              </div>
+            ))}
+
+            {/* 전송 결과 */}
+            {kakaoResult&&(
+              <div className="rounded-2xl p-4 text-center" style={{background:kakaoResult.success?'#F0FFF4':'#FFF0F0',border:`2px solid ${kakaoResult.success?'#B8EDCC':'#FFB3B3'}`}}>
+                {kakaoResult.success
+                  ?<><div style={{fontSize:36}}>🎉</div><div className="font-black" style={{color:'#2E7D32'}}>{kakaoResult.name} 결과 전송 완료!</div><div className="text-xs mt-1" style={{color:'#555'}}>부모님 카카오톡 "나와의 채팅"을 확인해주세요!</div></>
+                  :<><div style={{fontSize:36}}>😢</div><div className="font-black" style={{color:'#E53935'}}>전송 실패</div><div className="text-xs mt-1" style={{color:'#aaa'}}>{kakaoResult.msg}</div></>
+                }
+              </div>
+            )}
+
+            <div className="rounded-2xl p-4 mt-3" style={{background:'#F8F0FF',border:'2px solid #E0C8FF'}}>
+              <div className="text-xs font-bold mb-1" style={{color:'#C44EFF'}}>⏰ 자동 발송 안내</div>
+              <div className="text-xs" style={{color:'#888'}}>앱이 열려있는 상태에서 매일 저녁 9시에 자동으로 전송돼요. 앱이 닫혀있으면 수동으로 버튼을 눌러주세요!</div>
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* 모달 */}
+      {modal&&(
+        <div className="modal-overlay" onClick={()=>setModal(null)}>
+          <div onClick={e=>e.stopPropagation()} className="slide-up bg-white rounded-3xl p-6 mx-4" style={{width:'88%',maxWidth:340}}>
+            {modal.type==='buy'&&(()=>{const item=shopItems[modal.idx];const ok=cur.totalPoints>=item.pts;return(<>
+              <div className="float-icon text-center text-5xl mb-2">{item.icon}</div>
+              <div className="text-center text-lg font-black mb-1" style={{color:'#333'}}>{item.name}</div>
+              <div className="text-center text-xs mb-4" style={{color:'#aaa'}}>{item.desc}</div>
+              <div className="rounded-2xl p-4 text-center mb-3" style={{background:'linear-gradient(135deg,#FFF9E6,#FFF0F5)'}}>
+                <div className="text-xs mb-1" style={{color:'#aaa'}}>필요 포인트</div>
+                <div className="text-3xl font-black" style={{color:'#FF6B9D'}}>🪙 {item.pts}P</div>
+                <div className="text-xs mt-1" style={{color:'#bbb'}}>보유 {cur.totalPoints}P → 교환 후 {cur.totalPoints-item.pts}P</div>
+              </div>
+              {!ok&&<div className="rounded-xl p-3 text-center text-xs mb-3" style={{background:'#FFF0F0',color:'#E53935'}}>😢 포인트가 부족해요!</div>}
+              <div className="flex gap-2">
+                <button onClick={()=>setModal(null)} style={{flex:1,padding:12,borderRadius:12,border:'2px solid #EEE',background:'white',cursor:'pointer',fontFamily:'inherit',fontSize:13,fontWeight:700}}>취소</button>
+                <button onClick={()=>ok&&confirmBuy(modal.idx)} style={{flex:1,padding:12,borderRadius:12,background:ok?'linear-gradient(135deg,#C44EFF,#FF6B9D)':'#ccc',color:'white',border:'none',cursor:ok?'pointer':'default',fontFamily:'inherit',fontSize:13,fontWeight:900}}>{ok?'교환 신청 🎉':'포인트 부족'}</button>
+              </div>
+            </>);})()} 
+            {modal.type==='bought'&&(<>
+              <div className="float-icon text-center text-6xl mb-2">🎉</div>
+              <div className="text-center text-lg font-black mb-2" style={{color:'#333'}}>교환 신청 완료!</div>
+              <div className="text-center text-sm mb-2" style={{color:'#888',lineHeight:1.7}}><strong style={{color:'#C44EFF'}}>{shopItems[modal.idx].name}</strong> 교환을<br/>부모님께 요청했어요! 😄</div>
+              <button onClick={()=>setModal(null)} style={{width:'100%',padding:13,borderRadius:14,background:'linear-gradient(135deg,#C44EFF,#FF6B9D)',color:'white',border:'none',cursor:'pointer',fontFamily:'inherit',fontSize:14,fontWeight:900}}>확인! 🌟</button>
+            </>)}
+            {(modal.type==='editshop'||modal.type==='addshop')&&(<>
+              <div className="text-base font-black mb-1" style={{color:'#333'}}>{modal.type==='addshop'?'✨ 새 보상 추가':'✏️ 보상 수정'}</div>
+              <div className="text-xs mb-3" style={{color:'#aaa'}}>{modal.type==='addshop'?'부모님이 직접 보상을 만들어요!':'보상 정보를 수정해요'}</div>
+              <div className="text-xs font-bold mb-1" style={{color:'#999'}}>아이콘</div>
+              <div className="flex flex-wrap gap-1 mb-3">{SHOP_ICONS.map(ic=><div key={ic} onClick={()=>setEditDraft(d=>({...d,icon:ic}))} style={{width:32,height:32,border:editDraft.icon===ic?'2px solid #C44EFF':'2px solid transparent',background:editDraft.icon===ic?'#EED5FF':'#F5F0FF',borderRadius:8,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',fontSize:18}}>{ic}</div>)}</div>
+              {[['name','보상 이름','예: 용돈 500원'],['pts','포인트','10'],['desc','설명','예: 포인트 10개 교환']].map(([key,label,ph])=>(
+                <div key={key} className="mb-3">
+                  <div className="text-xs font-bold mb-1" style={{color:'#999'}}>{label}</div>
+                  <input type={key==='pts'?'number':'text'} style={{width:'100%',border:'2px solid #E8D5FF',borderRadius:10,padding:'8px 12px',fontSize:13,fontFamily:'inherit',outline:'none',color:'#333'}} value={editDraft[key]||''} onChange={e=>setEditDraft(d=>({...d,[key]:key==='pts'?parseInt(e.target.value)||1:e.target.value}))} placeholder={ph}/>
+                </div>
+              ))}
+              <div className="flex gap-2">
+                {modal.type==='editshop'&&<button onClick={()=>delShop(modal.idx)} style={{flex:1,padding:12,borderRadius:12,border:'2px solid #FFB3B3',background:'#FFF5F5',color:'#E53935',cursor:'pointer',fontFamily:'inherit',fontSize:13,fontWeight:700}}>삭제 🗑️</button>}
+                <button onClick={()=>setModal(null)} style={{flex:1,padding:12,borderRadius:12,border:'2px solid #EEE',background:'white',cursor:'pointer',fontFamily:'inherit',fontSize:13,fontWeight:700}}>취소</button>
+                <button onClick={()=>saveShop(modal.idx)} style={{flex:1,padding:12,borderRadius:12,background:'linear-gradient(135deg,#C44EFF,#FF6B9D)',color:'white',border:'none',cursor:'pointer',fontFamily:'inherit',fontSize:13,fontWeight:900}}>저장 ✅</button>
+              </div>
+            </>)}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+const root=ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App/>);
 </script>
+</body>
+</html>
