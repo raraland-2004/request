@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<title>카카오 토큰 발급</title>
+<style>
+body{font-family:sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0;background:#FEE500;}
+.box{background:white;border-radius:20px;padding:30px;max-width:500px;width:90%;text-align:center;}
+.result{background:#f5f5f5;border-radius:10px;padding:15px;margin-top:15px;text-align:left;word-break:break-all;font-size:13px;}
+button{background:#FEE500;border:none;border-radius:10px;padding:12px 24px;font-size:14px;font-weight:bold;cursor:pointer;margin-top:15px;}
+</style>
+</head>
+<body>
+<div class="box">
+  <h2>🪙 카카오 토큰 발급기</h2>
+  <p id="status">토큰 발급 중... ⏳</p>
+  <div class="result" id="result" style="display:none"></div>
+  <button id="copy-btn" style="display:none" onclick="copyToken()">📋 액세스 토큰 복사!</button>
+  <button id="copy-refresh" style="display:none" onclick="copyRefresh()">📋 리프레시 토큰 복사!</button>
+</div>
+<script>
+const REST_API_KEY='7baa4386e5393747c7969595e81e97fd';
+const CLIENT_SECRET='WwDh4YNWrKI1L6K2q7ovEnuD0n6CvoCR';
+const REDIRECT_URI='https://raraland-2004.github.io/request/';
+const CODE='689fBMpMyXXyq8BZxp8Vbm1jbrMjZjz3By13vI2pf-9-fFulB1nVegAAAAQKDRlTAAABnn71A4kq3eF1vjqPRg';
+let accessToken='';
+let refreshToken='';
+async function getToken(){
+  const params=new URLSearchParams({grant_type:'authorization_code',client_id:REST_API_KEY,client_secret:CLIENT_SECRET,redirect_uri:REDIRECT_URI,code:CODE});
+  try{
+    const res=await fetch('https://kauth.kakao.com/oauth/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:params.toString()});
+    const data=await res.json();
+    if(data.access_token){
+      accessToken=data.access_token;
+      refreshToken=data.refresh_token;
+      document.getElementById('status').textContent='✅ 토큰 발급 성공!';
+      document.getElementById('result').style.display='block';
+      document.getElementById('result').innerHTML='<b>액세스 토큰:</b><br>'+accessToken+'<br><br><b>리프레시 토큰:</b><br>'+refreshToken;
+      document.getElementById('copy-btn').style.display='inline-block';
+      document.getElementById('copy-refresh').style.display='inline-block';
+    }else{
+      document.getElementById('status').textContent='❌ 오류: '+JSON.stringify(data);
+    }
+  }catch(e){
+    document.getElementById('status').textContent='❌ 네트워크 오류: '+e.message;
+  }
+}
+function copyToken(){navigator.clipboard.writeText(accessToken);alert('액세스 토큰 복사됐어요! Claude에게 붙여넣기 해주세요 😊');}
+function copyRefresh(){navigator.clipboard.writeText(refreshToken);alert('리프레시 토큰 복사됐어요! Claude에게 붙여넣기 해주세요 😊');}
+getToken();
+</script>
+</body>
+</html>
